@@ -152,6 +152,16 @@ extension [Self](self: Self)(using s: Collection[Self]) {
   def map[T](transform: (s.Element) => T): HyArray[T] =
     self.reduce(HyArray[T](), (r, e) => r.append(transform(e)))
 
+  /** Returns a collection with the elements of `self` satisfying `isInclude`, in order.
+   *
+   *  @complexity
+   *    O(n) where n is the number of elements in `self`.
+   */
+  def filter(isIncluded: (s.Element) => Boolean): HyArray[s.Element] =
+    self.reduce(HyArray[s.Element](), (r, e) => {
+      if (isIncluded(e)) { r.append(e, assumeUniqueness = true) } else { r }
+    })
+
   /** Returns the position of the first element of `self` satisfying `predicate`, or `None` if no
     * such element exists.
     *
