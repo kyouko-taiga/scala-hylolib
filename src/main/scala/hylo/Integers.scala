@@ -11,7 +11,7 @@ given intIsValue: Value[Int] with {
     def eq(other: Int): Boolean =
       self == other
 
-    def hashInto(hasher: Hasher): Unit =
+    def hashInto(hasher: Hasher): Hasher =
       hasher.combine(self)
 
   }
@@ -28,7 +28,7 @@ given intIsComparable: Comparable[Int] with {
     def eq(other: Int): Boolean =
       self == other
 
-    def hashInto(hasher: Hasher): Unit =
+    def hashInto(hasher: Hasher): Hasher =
       hasher.combine(self)
 
     def lt(other: Int): Boolean = self < other

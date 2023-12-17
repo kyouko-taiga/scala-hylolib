@@ -155,8 +155,8 @@ given hyArrayIsValue[T](using tIsValue: Value[T]): Value[HyArray[T]] with {
     def eq(other: HyArray[T]): Boolean =
       self.elementsEqual(other)
 
-    def hashInto(hasher: Hasher): Unit =
-      self.forEach((e) => { e.hashInto(hasher); true })
+    def hashInto(hasher: Hasher): Hasher =
+      self.reduce(hasher, (h, e) => e.hashInto(h))
 
   }
 

@@ -16,7 +16,7 @@ final class AnyValue private (
     private val wrapped: AnyRef,
     private val _copy: (AnyRef) => AnyValue,
     private val _eq: (AnyRef, AnyRef) => Boolean,
-    private val _hashInto: (AnyRef, Hasher) => Unit
+    private val _hashInto: (AnyRef, Hasher) => Hasher
 ) {
 
   /** Returns a copy of `this`. */
@@ -28,7 +28,7 @@ final class AnyValue private (
     _eq(this.wrapped, other.wrapped)
 
   /** Hashes the salient parts of `this` into `hasher`. */
-  def hashInto(hasher: Hasher): Unit =
+  def hashInto(hasher: Hasher): Hasher =
     _hashInto(this.wrapped, hasher)
 
   /** Returns the value wrapped in `this` as an instance of `T`. */
@@ -51,7 +51,7 @@ object AnyValue {
     def eq(a: AnyRef, b: AnyRef): Boolean =
       a.asInstanceOf[Ref[T]].value eq b.asInstanceOf[Ref[T]].value
 
-    def hashInto(a: AnyRef, hasher: Hasher): Unit =
+    def hashInto(a: AnyRef, hasher: Hasher): Hasher =
       a.asInstanceOf[Ref[T]].value.hashInto(hasher)
 
     new AnyValue(Ref(wrapped), copy, eq, hashInto)
@@ -68,7 +68,7 @@ given anyValueIsValue: Value[AnyValue] with {
     def eq(other: AnyValue): Boolean =
       self eq other
 
-    def hashInto(hasher: Hasher): Unit =
+    def hashInto(hasher: Hasher): Hasher =
       self.hashInto(hasher)
 
   }

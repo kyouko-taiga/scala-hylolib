@@ -16,7 +16,7 @@ trait Value[Self] {
     def eq(other: Self): Boolean
 
     /** Hashes the salient parts of `self` into `hasher`. */
-    def hashInto(hasher: Hasher): Unit
+    def hashInto(hasher: Hasher): Hasher
 
   }
 

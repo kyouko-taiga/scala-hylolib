@@ -3,20 +3,18 @@ package hylo
 import scala.util.Random
 
 /** A universal hash function. */
-final class Hasher private {
-
-  /** The currently computed hash value. */
-  private var hash = Hasher.offsetBasis
+final class Hasher private (private val hash: Int = Hasher.offsetBasis) {
 
   /** Returns the computed hash value. */
   def finalizeHash(): Int =
     hash
 
   /** Adds `n` to the computed hash value. */
-  def combine(n: Int): Unit =
-    hash = hash ^ n
-    hash = hash * Hasher.prime
-
+  def combine(n: Int): Hasher =
+    var h = hash
+    h = h ^ n
+    h = h * Hasher.prime
+    new Hasher(h)
 }
 
 object Hasher {
@@ -32,5 +30,9 @@ object Hasher {
     val h = new Hasher()
     h.combine(seed)
     h
+
+  /** Returns the hash of `v`. */
+  def hash[T: Value](v: T): Int =
+    v.hashInto(Hasher()).finalizeHash()
 
 }
