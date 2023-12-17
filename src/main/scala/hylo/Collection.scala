@@ -172,6 +172,14 @@ extension [Self](self: Self)(using s: Collection[Self]) {
   def containsWhere(predicate: (s.Element) => Boolean): Boolean =
     self.firstPositionWhere(predicate) != None
 
+  /** Returns `true` if all elements in `self` satisfy `predicate`.
+   *
+   * @complexity
+   *   O(n) where n is the number of elements in `self`.
+   */
+  def allSatisfy(predicate: (s.Element) => Boolean): Boolean =
+    self.firstPositionWhere(predicate) == None
+
   /** Returns the position of the first element of `self` satisfying `predicate`, or `None` if no
     * such element exists.
     *
