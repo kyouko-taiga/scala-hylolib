@@ -37,7 +37,7 @@ final class HyArray[Element] private (using
       val s = _storage.asInstanceOf[scala.Array[AnyRef | Null]]
       var i = 0
       while (i < count) {
-        newStorage(i) = _storage(i)
+        newStorage(i) = _storage(i).asInstanceOf[Element].copy().asInstanceOf[AnyRef]
         i += 1
       }
 
@@ -114,8 +114,10 @@ final class HyArray[Element] private (using
     }
     s + "]"
 
-  /** Returns an independent copy of `this`. */
-  private def copy(minimumCapacity: Int = 0): HyArray[Element] =
+  /** Returns an independent copy of `this`, capable of storing `minimumCapacity` elements before
+    * allocating new storage.
+    */
+  def copy(minimumCapacity: Int = 0): HyArray[Element] =
     if (minimumCapacity > capacity) {
       // If the requested capacity on the copy is greater than what we have, `reserveCapacity` will
       // create an independent value.
@@ -124,7 +126,7 @@ final class HyArray[Element] private (using
       val clone = HyArray[Element]().reserveCapacity(max(minimumCapacity, count))
       var i = 0
       while (i < count) {
-        clone._storage(i) = _storage(i)
+        clone._storage(i) = _storage(i).asInstanceOf[Element].copy().asInstanceOf[AnyRef]
         i += 1
       }
       clone._count = count
@@ -140,6 +142,23 @@ object HyArray {
     var a = new HyArray[T](null, 0)
     for (e <- elements) a = a.append(e, assumeUniqueness = true)
     a
+
+}
+
+given hyArrayIsValue[T](using tIsValue: Value[T]): Value[HyArray[T]] with {
+
+  extension (self: HyArray[T]) {
+
+    def copy(): HyArray[T] =
+      self.copy()
+
+    def eq(other: HyArray[T]): Boolean =
+      self.elementsEqual(other)
+
+    def hashInto(hasher: Hasher): Unit =
+      self.forEach((e) => { e.hashInto(hasher); true })
+
+  }
 
 }
 
