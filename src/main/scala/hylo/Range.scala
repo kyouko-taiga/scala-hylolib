@@ -35,6 +35,3 @@ object Range {
     new Range(lowerBound, upperBound)
 
 }
-
-// NOTE: The inability to "compute" anything before delegating to the primary constructor is
-// annoying, to say the least.

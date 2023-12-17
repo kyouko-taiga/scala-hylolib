@@ -55,7 +55,7 @@ final class HyArray[Element] private (
     result._count += 1
     result
 
-  // Note: Can't refine `C.Element` without renaming the generic parameter of `HyArray`.
+  // NOTE: Can't refine `C.Element` without renaming the generic parameter of `HyArray`.
   // /** Adds the contents of `source` at the end of the array. */
   // def appendContents[C](using
   //     s: Collection[C]
