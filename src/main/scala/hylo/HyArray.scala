@@ -25,7 +25,7 @@ final class HyArray[Element] private (
     else { _storage.length }
 
   /** Reserves enough storage to store `n` elements in `this`. */
-  def reserve_capacity(n: Int, assumeUniqueness: Boolean = false): HyArray[Element] =
+  def reserveCapacity(n: Int, assumeUniqueness: Boolean = false): HyArray[Element] =
     if (n <= capacity) {
       this
     } else {
@@ -118,9 +118,9 @@ final class HyArray[Element] private (
     if (minimumCapacity > capacity) {
       // If the requested capacity on the copy is greater than what we have, `reserveCapacity` will
       // create an independent value.
-      reserve_capacity(minimumCapacity)
+      reserveCapacity(minimumCapacity)
     } else {
-      val clone = HyArray[Element]().reserve_capacity(max(minimumCapacity, count))
+      val clone = HyArray[Element]().reserveCapacity(max(minimumCapacity, count))
       var i = 0
       while (i < count) {
         clone._storage(i) = _storage(i)
