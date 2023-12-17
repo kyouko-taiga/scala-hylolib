@@ -43,7 +43,7 @@ trait Collection[Self] {
       */
     def endPosition: Position
 
-    /** Returns the position immediately after `p`
+    /** Returns the position immediately after `p`.
       *
       * @requires
       *   `p` is a valid position in `self` different from `endPosition`.
