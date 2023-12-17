@@ -4,7 +4,7 @@ import java.util.Arrays
 
 /** An ordered, random-access collection. */
 final class HyArray[Element] private (
-    private val _storage: scala.Array[AnyRef | Null] | Null,
+    private var _storage: scala.Array[AnyRef | Null] | Null,
     private var _count: Int // NOTE: where do I document private fields
 ) {
 
@@ -25,7 +25,7 @@ final class HyArray[Element] private (
     else { _storage.length }
 
   /** Reserves enough storage to store `n` elements in `this`. */
-  def reserve_capacity(n: Int): HyArray[Element] =
+  def reserve_capacity(n: Int, assumeUniqueness: Boolean = false): HyArray[Element] =
     if (n <= capacity) {
       this
     } else {
@@ -39,12 +39,18 @@ final class HyArray[Element] private (
         newStorage(i) = _storage(i)
         i += 1
       }
-      new HyArray(newStorage, count)
+
+      if (assumeUniqueness) {
+        _storage = newStorage
+        this
+      } else {
+        new HyArray(newStorage, count)
+      }
     }
 
   /** Adds a new element at the end of the array. */
-  def append(source: Element, assumingUniqueness: Boolean = false): HyArray[Element] =
-    val result = if (assumingUniqueness && (count < capacity)) { this } else { copy(capacity + 1) }
+  def append(source: Element, assumeUniqueness: Boolean = false): HyArray[Element] =
+    val result = if (assumeUniqueness && (count < capacity)) { this } else { copy(capacity + 1) }
     result._storage(count) = source.asInstanceOf[AnyRef]
     result._count += 1
     result
@@ -61,24 +67,27 @@ final class HyArray[Element] private (
   //   source.reduce(result, (r, e) => r.append(e, assumeUniqueness = true))
 
   /** Removes and returns the last element, or returns `None` if the array is empty. */
-  def popLast(): (HyArray[Element], Option[Element]) =
+  def popLast(assumeUniqueness: Boolean = false): (HyArray[Element], Option[Element]) =
     if (isEmpty) {
       (this, None)
     } else {
-      val clone = copy()
-      clone._count -= 1
-      (clone, Some(clone._storage(clone._count).asInstanceOf[Element]))
+      val result = if (assumeUniqueness) { this } else { copy() }
+      result._count -= 1
+      (result, Some(result._storage(result._count).asInstanceOf[Element]))
     }
 
   /** Removes all elements in the array, keeping allocated storage iff `keepStorage` is true. */
-  def removeAll(keepStorage: Boolean = false): HyArray[Element] =
+  def removeAll(
+      keepStorage: Boolean = false,
+      assumeUniqueness: Boolean = false
+  ): HyArray[Element] =
     if (isEmpty) {
       this
     } else if (keepStorage) {
-      val clone = copy()
-      Arrays.fill(clone._storage, null)
-      clone._count = 0
-      clone
+      val result = if (assumeUniqueness) { this } else { copy() }
+      Arrays.fill(result._storage, null)
+      result._count = 0
+      result
     } else {
       HyArray()
     }
