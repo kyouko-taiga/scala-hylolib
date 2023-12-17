@@ -49,10 +49,16 @@ final class HyArray[Element] private (
     result._count += 1
     result
 
-  /** Adds the contents of `source` at the end of the array. */
-  def appendContents[C: Collection](source: C): HyArray[Element] =
-    val clone = copy(count + source.count)
-    this.reduce(clone, (r, e) => r.append(e))
+  // Note: Can't refine `C.Element` without renaming the generic parameter of `HyArray`.
+  // /** Adds the contents of `source` at the end of the array. */
+  // def appendContents[C](using
+  //     s: Collection[C]
+  // )(
+  //     source: C { type Element = Element },
+  //     assumeUniqueness: Boolean = false
+  // ): HyArray[Element] =
+  //   val result = if (assumeUniqueness) { this } else { copy(count + source.count) }
+  //   source.reduce(result, (r, e) => r.append(e, assumeUniqueness = true))
 
   /** Removes and returns the last element, or returns `None` if the array is empty. */
   def popLast(): (HyArray[Element], Option[Element]) =
