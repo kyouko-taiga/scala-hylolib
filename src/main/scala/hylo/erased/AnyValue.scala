@@ -8,23 +8,23 @@ private final class Ref[T](val value: T) {
 
 }
 
-/** A type-erased equatable value.
+/** A type-erased value.
   *
-  * An `AnyEquatable` forwards its operations to a wrapped value, hiding its implementation.
+  * An `AnyValue` forwards its operations to a wrapped value, hiding its implementation.
   */
-final class AnyEquatable private (
+final class AnyValue private (
     private val wrapped: AnyRef,
-    private val _copy: (AnyRef) => AnyEquatable,
+    private val _copy: (AnyRef) => AnyValue,
     private val _eq: (AnyRef, AnyRef) => Boolean,
     private val _hashInto: (AnyRef, Hasher) => Unit
 ) {
 
   /** Returns a copy of `this`. */
-  def copy(): AnyEquatable =
+  def copy(): AnyValue =
     _copy(this.wrapped)
 
   /** Returns `true` iff `this` and `other` have an equivalent value. */
-  def eq(other: AnyEquatable): Boolean =
+  def eq(other: AnyValue): Boolean =
     _eq(this.wrapped, other.wrapped)
 
   /** Hashes the salient parts of `this` into `hasher`. */
@@ -41,12 +41,12 @@ final class AnyEquatable private (
 
 }
 
-object AnyEquatable {
+object AnyValue {
 
   /** Creates an instance wrapping `wrapped`. */
-  def apply[T](using Value[T])(wrapped: T): AnyEquatable =
-    def copy(a: AnyRef): AnyEquatable =
-      AnyEquatable(a.asInstanceOf[Ref[T]].value.copy())
+  def apply[T](using Value[T])(wrapped: T): AnyValue =
+    def copy(a: AnyRef): AnyValue =
+      AnyValue(a.asInstanceOf[Ref[T]].value.copy())
 
     def eq(a: AnyRef, b: AnyRef): Boolean =
       a.asInstanceOf[Ref[T]].value eq b.asInstanceOf[Ref[T]].value
@@ -54,18 +54,18 @@ object AnyEquatable {
     def hashInto(a: AnyRef, hasher: Hasher): Unit =
       a.asInstanceOf[Ref[T]].value.hashInto(hasher)
 
-    new AnyEquatable(Ref(wrapped), copy, eq, hashInto)
+    new AnyValue(Ref(wrapped), copy, eq, hashInto)
 
 }
 
-given anyEquatableIsValue: Value[AnyEquatable] with {
+given anyValueIsValue: Value[AnyValue] with {
 
-  extension (self: AnyEquatable) {
+  extension (self: AnyValue) {
 
-    def copy(): AnyEquatable =
+    def copy(): AnyValue =
       self.copy()
 
-    def eq(other: AnyEquatable): Boolean =
+    def eq(other: AnyValue): Boolean =
       self eq other
 
     def hashInto(hasher: Hasher): Unit =

@@ -5,33 +5,32 @@ package hylo
   * A `AnyCollection` forwards its operations to a wrapped value, hiding its implementation.
   */
 final class AnyCollection[Element] private (
-    val _start: () => AnyEquatable,
-    val _end: () => AnyEquatable,
-    val _after: (AnyEquatable) => AnyEquatable,
-    val _at: (AnyEquatable) => Element
+    val _start: () => AnyValue,
+    val _end: () => AnyValue,
+    val _after: (AnyValue) => AnyValue,
+    val _at: (AnyValue) => Element
 )
 
 object AnyCollection {
 
   /** Creates an instance forwarding its operations to `base`. */
   def apply[Base](using b: Collection[Base])(base: Base): AnyCollection[b.Element] =
-    // NOTE: This evidence has to be redefined here otherwise the compiler gets confused when the
-    // method is called on a collection of `Int`, reporting ambiguity between `intIsValue` and
-    // `anyEquatableIsValue`. None of these choices is correct, as the right evidence is
-    // `b.positionIsValue`. Note also that the ambiguity is suppressed if the constructor of
-    // `AnyEquatable` is declared with a context bound rather than an implicit parameter.
+    // NOTE: This evidence is redefined so the compiler won't report ambiguity between `intIsValue`
+    // and `anyValueIsValue` when the method is called on a collection of `Int`s. None of these
+    // choices is even correct! Note also that the ambiguity is suppressed if the constructor of
+    // `AnyValue` is declared with a context bound rather than an implicit parameter.
     given Value[b.Position] = b.positionIsValue
 
-    def start(): AnyEquatable =
-      AnyEquatable(base.startPosition)
+    def start(): AnyValue =
+      AnyValue(base.startPosition)
 
-    def end(): AnyEquatable =
-      AnyEquatable(base.endPosition)
+    def end(): AnyValue =
+      AnyValue(base.endPosition)
 
-    def after(p: AnyEquatable): AnyEquatable =
-      AnyEquatable(base.positionAfter(p.unsafelyUnwrappedAs[b.Position]))
+    def after(p: AnyValue): AnyValue =
+      AnyValue(base.positionAfter(p.unsafelyUnwrappedAs[b.Position]))
 
-    def at(p: AnyEquatable): b.Element =
+    def at(p: AnyValue): b.Element =
       base.at(p.unsafelyUnwrappedAs[b.Position])
 
     new AnyCollection[b.Element](
@@ -47,8 +46,8 @@ given anyCollectionIsCollection[T]: Collection[AnyCollection[T]] with {
 
   type Element = T
 
-  type Position = AnyEquatable
-  given positionIsValue: Value[Position] = anyEquatableIsValue
+  type Position = AnyValue
+  given positionIsValue: Value[Position] = anyValueIsValue
 
   extension (self: AnyCollection[T]) {
 
