@@ -33,8 +33,8 @@ final class HyArray[Element] private (
       while (newCapacity < n) { newCapacity = newCapacity << 1 }
 
       val newStorage = new scala.Array[AnyRef | Null](newCapacity)
-      val s          = _storage.asInstanceOf[scala.Array[AnyRef | Null]]
-      var i          = 0
+      val s = _storage.asInstanceOf[scala.Array[AnyRef | Null]]
+      var i = 0
       while (i < count) {
         newStorage(i) = _storage(i)
         i += 1
@@ -106,7 +106,7 @@ final class HyArray[Element] private (
       reserve_capacity(minimumCapacity)
     } else {
       val clone = HyArray[Element]().reserve_capacity(max(minimumCapacity, count))
-      var i     = 0
+      var i = 0
       while (i < count) {
         clone._storage(i) = _storage(i)
         i += 1
