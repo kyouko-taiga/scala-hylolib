@@ -49,6 +49,14 @@ class CollectionTests extends munit.FunSuite {
     assertEquals(t1.count, 1)
   }
 
+  test("reduce") {
+    val empty = AnyCollection(using hyArrayIsCollection)(HyArray[Int]())
+    assertEquals(empty.reduce(0, (s, x) => s + x), 0)
+
+    val nonEmpty = AnyCollection(using hyArrayIsCollection)(HyArray(1, 2, 3))
+    assertEquals(nonEmpty.reduce(0, (s, x) => s + x), 6)
+  }
+
   // NOTE: Couldn't find a workaround for the ambiguous given instances.
   // test("elementsEqual") {
   //   val a = HyArray(1, 2)
