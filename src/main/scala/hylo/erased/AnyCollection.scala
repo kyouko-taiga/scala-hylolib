@@ -15,11 +15,30 @@ object AnyCollection {
 
   /** Creates an instance forwarding its operations to `base`. */
   def apply[Base](using b: Collection[Base])(base: Base): AnyCollection[b.Element] =
+    // NOTE: This evidence has to be redefined here otherwise the compiler gets confused when the
+    // method is called on a collection of `Int`, reporting ambiguity between `intIsComparable`
+    // and `anyEquatableIsEquatable`. None of these choices is correct, as the right evidence is
+    // `b.positionIsEquatable`. Note also that the ambiguity is suppressed if the constructor of
+    // `AnyEquatable` is declared with a context bound rather than an implicit parameter.
+    given Equatable[b.Position] = b.positionIsEquatable
+
+    def start(): AnyEquatable =
+      AnyEquatable(base.startPosition)
+
+    def end(): AnyEquatable =
+      AnyEquatable(base.endPosition)
+
+    def after(p: AnyEquatable): AnyEquatable =
+      AnyEquatable(base.positionAfter(p.unsafelyUnwrappedAs[b.Position]))
+
+    def at(p: AnyEquatable): b.Element =
+      base.at(p.unsafelyUnwrappedAs[b.Position])
+
     new AnyCollection[b.Element](
-      _start = () => AnyEquatable(base.startPosition),
-      _end = () => AnyEquatable(base.endPosition),
-      _after = (p) => AnyEquatable(base.positionAfter(p.unsafelyUnwrappedAs[b.Position])),
-      _at = (p) => base.at(p.unsafelyUnwrappedAs[b.Position])
+      _start = start,
+      _end = end,
+      _after = after,
+      _at = at
     )
 
 }

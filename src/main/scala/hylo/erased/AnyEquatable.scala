@@ -34,7 +34,7 @@ final class AnyEquatable private (
 object AnyEquatable {
 
   /** Creates an instance wrapping `wrapped`. */
-  def apply[T: Equatable](wrapped: T): AnyEquatable =
+  def apply[T](using Equatable[T])(wrapped: T): AnyEquatable =
     def eq(a: AnyRef, b: AnyRef) =
       a.asInstanceOf[Ref[T]].value eq b.asInstanceOf[Ref[T]].value
     new AnyEquatable(Ref(wrapped), eq)

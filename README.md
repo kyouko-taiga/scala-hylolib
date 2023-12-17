@@ -13,3 +13,11 @@ For example, given `Comparable <: Equatable ` and `Hashable <: Equatable`, if we
 The inability to "compute" anything before delegating to the primary constructor is annoying.
 Having to define an `apply` method in the companion object seems like a convoluted workaround that is difficult to "discover".
 
+These two definitions don't behave the same way:
+
+```
+def f[T](using Equatable[T])(x: T) = ???
+def f[T: Equatable](x: T) = ???
+```
+
+The latter seems to cause less ambiguous given errors.
