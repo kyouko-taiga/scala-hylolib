@@ -102,9 +102,10 @@ extension [Self](self: Self)(using s: Collection[Self]) {
     if (self.isEmpty) {
       None
     } else {
-      val s = self.startPosition
-      val t = self.positionAfter(s)
-      Some((self.at(s), Slice(self, Range(t, self.endPosition, self.isBefore))))
+      val p = self.startPosition
+      val q = self.positionAfter(p)
+      val t = Slice(self, Range(q, self.endPosition, (a, b) => (a eq b) || self.isBefore(a, b)))
+      Some((self.at(p), t))
     }
 
   /** Applies `combine` on `partialResult` and each element of `self`, in order.
