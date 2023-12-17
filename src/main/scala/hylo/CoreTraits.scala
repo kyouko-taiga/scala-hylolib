@@ -14,6 +14,17 @@ trait Equatable[Self] {
 extension [Self: Equatable](self: Self) def neq(other: Self): Boolean = !self.eq(other)
 
 // ----------------------------------------------------------------------------
+// Hashable
+// ----------------------------------------------------------------------------
+
+trait Hashable[Self] extends Equatable[Self] {
+
+  /** Hashes the salient parts of `self` into `hasher`. */
+  extension (self: Self) def hashInto(hasher: Hasher): Unit
+
+}
+
+// ----------------------------------------------------------------------------
 // Comparable
 // ----------------------------------------------------------------------------
 
