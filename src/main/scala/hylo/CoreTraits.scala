@@ -2,8 +2,8 @@ package hylo
 
 /** A type whose instance can be treated as independent values.
   *
-  * The data structure of and algorithms of Hylo's standard library operate "notional values"
-  * rather than arbitrary references. This trait defines the basis operations of all values.
+  * The data structure of and algorithms of Hylo's standard library operate "notional values" rather
+  * than arbitrary references. This trait defines the basis operations of all values.
   */
 trait Value[Self] {
 

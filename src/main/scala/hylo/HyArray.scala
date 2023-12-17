@@ -3,7 +3,9 @@ package hylo
 import java.util.Arrays
 
 /** An ordered, random-access collection. */
-final class HyArray[Element] private (
+final class HyArray[Element] private (using
+    elementIsValue: Value[Element]
+)(
     private var _storage: scala.Array[AnyRef | Null] | Null,
     private var _count: Int // NOTE: where do I document private fields
 ) {
@@ -134,16 +136,17 @@ final class HyArray[Element] private (
 object HyArray {
 
   /** Creates an array with the given `elements`. */
-  def apply[T](elements: T*): HyArray[T] =
+  def apply[T](using t: Value[T])(elements: T*): HyArray[T] =
     var a = new HyArray[T](null, 0)
     for (e <- elements) a = a.append(e, assumeUniqueness = true)
     a
 
 }
 
-given hyArrayIsCollection[T]: Collection[HyArray[T]] with {
+given hyArrayIsCollection[T](using tIsValue: Value[T]): Collection[HyArray[T]] with {
 
   type Element = T
+  given elementIsValue: Value[T] = tIsValue
 
   type Position = Int
   given positionIsValue: Value[Int] = intIsValue

@@ -5,6 +5,7 @@ trait Collection[Self] {
 
   /** The type of the elements in the collection. */
   type Element
+  given elementIsValue: Value[Element]
 
   /** The type of a position in the collection. */
   type Position
@@ -148,7 +149,7 @@ extension [Self](self: Self)(using s: Collection[Self]) {
     * @complexity
     *   O(n) where n is the number of elements in `self`.
     */
-  def map[T](transform: (s.Element) => T): HyArray[T] =
+  def map[T](using Value[T])(transform: (s.Element) => T): HyArray[T] =
     self.reduce(
       HyArray[T](),
       (r, e) => r.append(transform(e), assumeUniqueness = true)

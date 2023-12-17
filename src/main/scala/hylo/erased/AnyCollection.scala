@@ -42,9 +42,10 @@ object AnyCollection {
 
 }
 
-given anyCollectionIsCollection[T]: Collection[AnyCollection[T]] with {
+given anyCollectionIsCollection[T](using tIsValue: Value[T]): Collection[AnyCollection[T]] with {
 
   type Element = T
+  given elementIsValue: Value[Element] = tIsValue
 
   type Position = AnyValue
   given positionIsValue: Value[Position] = anyValueIsValue
