@@ -221,3 +221,24 @@ extension [Self](self: Self)(using s: Collection[Self]) {
     }
 
 }
+
+extension [Self](self: Self)(using
+    s: Collection[Self],
+    e: Equatable[s.Element]
+) {
+
+  /** Returns `true` if `self` contains the same elements as `other`, in the same order. */
+  def elementsEqual[T](using o: Collection[T] { type Element = s.Element })(other: T): Boolean =
+    def loop(i: s.Position, j: o.Position): Boolean =
+      if (i eq self.endPosition) {
+        j eq other.endPosition
+      } else if (j eq other.endPosition) {
+        false
+      } else if (self.at(i) neq other.at(j)) {
+        false
+      } else {
+        loop(self.positionAfter(i), other.positionAfter(j))
+      }
+    loop(self.startPosition, other.startPosition)
+
+}

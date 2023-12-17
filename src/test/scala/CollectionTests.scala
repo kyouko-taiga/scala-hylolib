@@ -34,4 +34,10 @@ class CollectionTests extends munit.FunSuite {
     assert(!nonEmpty.isBefore(p2, nonEmpty.endPosition))
   }
 
+  // NOTE: Couldn't find a workaround for the ambiguous given instances.
+  // test("elementsEqual") {
+  //   val a = HyArray(1, 2)
+  //   assert(a.elementsEqual(a))
+  // }
+
 }
