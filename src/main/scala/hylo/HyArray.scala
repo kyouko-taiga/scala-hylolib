@@ -137,7 +137,7 @@ object HyArray {
   /** Creates an array with the given `elements`. */
   def apply[T](elements: T*): HyArray[T] =
     var a = new HyArray[T](null, 0)
-    for (e <- elements) a = a.append(e)
+    for (e <- elements) a = a.append(e, assumeUniqueness = true)
     a
 
 }
