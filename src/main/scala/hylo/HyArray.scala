@@ -43,11 +43,11 @@ final class HyArray[Element] private (
     }
 
   /** Adds a new element at the end of the array. */
-  def append(source: Element): HyArray[Element] =
-    val clone = copy(capacity + 1)
-    clone._storage(count) = source.asInstanceOf[AnyRef]
-    clone._count += 1
-    clone
+  def append(source: Element, assumingUniqueness: Boolean = false): HyArray[Element] =
+    val result = if (assumingUniqueness && (count < capacity)) { this } else { copy(capacity + 1) }
+    result._storage(count) = source.asInstanceOf[AnyRef]
+    result._count += 1
+    result
 
   /** Adds the contents of `source` at the end of the array. */
   def appendContents[C: Collection](source: C): HyArray[Element] =
