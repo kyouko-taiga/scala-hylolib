@@ -8,7 +8,7 @@ trait Collection[Self] {
 
   /** The type of a position in the collection. */
   type Position
-  given positionIsEquatable: Equatable[Position]
+  given positionIsValue: Value[Position]
 
   extension (self: Self) {
 
@@ -259,7 +259,7 @@ extension [Self](self: Self)(using s: Collection[Self]) {
 
 extension [Self](self: Self)(using
     s: Collection[Self],
-    e: Equatable[s.Element]
+    e: Value[s.Element]
 ) {
 
   /** Returns `true` if `self` contains the same elements as `other`, in the same order. */

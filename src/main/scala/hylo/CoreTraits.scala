@@ -1,34 +1,34 @@
 package hylo
 
-// ----------------------------------------------------------------------------
-// Equatable
-// ----------------------------------------------------------------------------
+/** A type whose instance can be treated as independent values.
+  *
+  * The data structure of and algorithms of Hylo's standard library operate "notional values"
+  * rather than arbitrary references. This trait defines the basis operations of all values.
+  */
+trait Value[Self] {
 
-trait Equatable[Self] {
+  extension (self: Self) {
 
-  /** Returns `true` iff `self` and `other` have an equivalent value. */
-  extension (self: Self) def eq(other: Self): Boolean
+    /** Returns a copy of `self`. */
+    def copy(): Self
 
-}
+    /** Returns `true` iff `self` and `other` have an equivalent value. */
+    def eq(other: Self): Boolean
 
-extension [Self: Equatable](self: Self) def neq(other: Self): Boolean = !self.eq(other)
+    /** Hashes the salient parts of `self` into `hasher`. */
+    def hashInto(hasher: Hasher): Unit
 
-// ----------------------------------------------------------------------------
-// Hashable
-// ----------------------------------------------------------------------------
-
-trait Hashable[Self] extends Equatable[Self] {
-
-  /** Hashes the salient parts of `self` into `hasher`. */
-  extension (self: Self) def hashInto(hasher: Hasher): Unit
+  }
 
 }
+
+extension [Self: Value](self: Self) def neq(other: Self): Boolean = !self.eq(other)
 
 // ----------------------------------------------------------------------------
 // Comparable
 // ----------------------------------------------------------------------------
 
-trait Comparable[Self] extends Equatable[Self] {
+trait Comparable[Self] extends Value[Self] {
 
   extension (self: Self) {
 

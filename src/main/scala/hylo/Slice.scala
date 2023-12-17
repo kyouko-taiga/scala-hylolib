@@ -31,7 +31,7 @@ given sliceIsCollection[T](using c: Collection[T]): Collection[Slice[T]] with {
   type Element = c.Element
 
   type Position = c.Position
-  given positionIsEquatable: Equatable[Position] = c.positionIsEquatable
+  given positionIsValue: Value[Position] = c.positionIsValue
 
   extension (self: Slice[T]) {
 

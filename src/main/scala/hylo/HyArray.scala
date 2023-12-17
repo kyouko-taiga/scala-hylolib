@@ -146,7 +146,7 @@ given hyArrayIsCollection[T]: Collection[HyArray[T]] with {
   type Element = T
 
   type Position = Int
-  given positionIsEquatable: Equatable[Int] = intIsComparable
+  given positionIsValue: Value[Int] = intIsValue
 
   extension (self: HyArray[T]) {
 

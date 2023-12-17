@@ -16,11 +16,11 @@ object AnyCollection {
   /** Creates an instance forwarding its operations to `base`. */
   def apply[Base](using b: Collection[Base])(base: Base): AnyCollection[b.Element] =
     // NOTE: This evidence has to be redefined here otherwise the compiler gets confused when the
-    // method is called on a collection of `Int`, reporting ambiguity between `intIsComparable`
-    // and `anyEquatableIsEquatable`. None of these choices is correct, as the right evidence is
-    // `b.positionIsEquatable`. Note also that the ambiguity is suppressed if the constructor of
+    // method is called on a collection of `Int`, reporting ambiguity between `intIsValue` and
+    // `anyEquatableIsValue`. None of these choices is correct, as the right evidence is
+    // `b.positionIsValue`. Note also that the ambiguity is suppressed if the constructor of
     // `AnyEquatable` is declared with a context bound rather than an implicit parameter.
-    given Equatable[b.Position] = b.positionIsEquatable
+    given Value[b.Position] = b.positionIsValue
 
     def start(): AnyEquatable =
       AnyEquatable(base.startPosition)
@@ -48,7 +48,7 @@ given anyCollectionIsCollection[T]: Collection[AnyCollection[T]] with {
   type Element = T
 
   type Position = AnyEquatable
-  given positionIsEquatable: Equatable[Position] = anyEquatableIsEquatable
+  given positionIsValue: Value[Position] = anyEquatableIsValue
 
   extension (self: AnyCollection[T]) {
 
