@@ -144,6 +144,14 @@ extension [Self](self: Self)(using s: Collection[Self]) {
       }
     loop(self.startPosition)
 
+  /** Returns a collection with the elements of `self` transformed by `transform`, in order.
+   *
+   *  @complexity
+   *    O(n) where n is the number of elements in `self`.
+   */
+  def map[T](transform: (s.Element) => T): HyArray[T] =
+    self.reduce(HyArray[T](), (r, e) => r.append(transform(e)))
+
   /** Returns the position of the first element of `self` satisfying `predicate`, or `None` if no
     * such element exists.
     *
