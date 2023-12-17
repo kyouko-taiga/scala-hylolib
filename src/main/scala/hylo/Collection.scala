@@ -150,7 +150,9 @@ extension [Self](self: Self)(using s: Collection[Self]) {
    *    O(n) where n is the number of elements in `self`.
    */
   def map[T](transform: (s.Element) => T): HyArray[T] =
-    self.reduce(HyArray[T](), (r, e) => r.append(transform(e)))
+    self.reduce(HyArray[T](), (r, e) => {
+      r.append(transform(e), assumeUniqueness = true)
+    })
 
   /** Returns a collection with the elements of `self` satisfying `isInclude`, in order.
    *
