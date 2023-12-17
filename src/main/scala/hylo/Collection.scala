@@ -24,8 +24,7 @@ trait Collection[Self] {
     def count: Int =
       val e = endPosition
       def _count(p: Position, n: Int): Int =
-        if (p eq e) { n }
-        else { _count(self.positionAfter(p), n + 1) }
+        if p eq e then n else _count(self.positionAfter(p), n + 1)
       _count(startPosition, 0)
 
     /** Returns the position of `self`'s first element', or `endPosition` if `self` is empty.
@@ -145,38 +144,40 @@ extension [Self](self: Self)(using s: Collection[Self]) {
     loop(self.startPosition)
 
   /** Returns a collection with the elements of `self` transformed by `transform`, in order.
-   *
-   *  @complexity
-   *    O(n) where n is the number of elements in `self`.
-   */
+    *
+    * @complexity
+    *   O(n) where n is the number of elements in `self`.
+    */
   def map[T](transform: (s.Element) => T): HyArray[T] =
-    self.reduce(HyArray[T](), (r, e) => {
-      r.append(transform(e), assumeUniqueness = true)
-    })
+    self.reduce(
+      HyArray[T](),
+      (r, e) => r.append(transform(e), assumeUniqueness = true)
+    )
 
   /** Returns a collection with the elements of `self` satisfying `isInclude`, in order.
-   *
-   *  @complexity
-   *    O(n) where n is the number of elements in `self`.
-   */
+    *
+    * @complexity
+    *   O(n) where n is the number of elements in `self`.
+    */
   def filter(isIncluded: (s.Element) => Boolean): HyArray[s.Element] =
-    self.reduce(HyArray[s.Element](), (r, e) => {
-      if (isIncluded(e)) { r.append(e, assumeUniqueness = true) } else { r }
-    })
+    self.reduce(
+      HyArray[s.Element](),
+      (r, e) => if (isIncluded(e)) then r.append(e, assumeUniqueness = true) else r
+    )
 
   /** Returns `true` if `self` contains an element satisfying `predicate`.
-   *
-   * @complexity
-   *   O(n) where n is the number of elements in `self`.
-   */
+    *
+    * @complexity
+    *   O(n) where n is the number of elements in `self`.
+    */
   def containsWhere(predicate: (s.Element) => Boolean): Boolean =
     self.firstPositionWhere(predicate) != None
 
   /** Returns `true` if all elements in `self` satisfy `predicate`.
-   *
-   * @complexity
-   *   O(n) where n is the number of elements in `self`.
-   */
+    *
+    * @complexity
+    *   O(n) where n is the number of elements in `self`.
+    */
   def allSatisfy(predicate: (s.Element) => Boolean): Boolean =
     self.firstPositionWhere(predicate) == None
 
@@ -246,7 +247,7 @@ extension [Self](self: Self)(using s: Collection[Self]) {
           least
         } else {
           val x = self.at(p)
-          val y = if (isOrderedBefore(x, least)) { x } else { least }
+          val y = if isOrderedBefore(x, least) then x else least
           _least(self.positionAfter(p), y)
         }
 

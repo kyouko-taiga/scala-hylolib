@@ -50,10 +50,8 @@ trait Comparable[Self] extends Equatable[Self] {
 
 /** Returns the lesser of `x` and `y`. */
 def min[T: Comparable](x: T, y: T): T =
-  if (y.lt(x)) { y }
-  else { x }
+  if y.lt(x) then y else x
 
 /** Returns the greater of `x` and `y`. */
 def max[T: Comparable](x: T, y: T): T =
-  if (x.lt(y)) { y }
-  else { x }
+  if x.lt(y) then y else x

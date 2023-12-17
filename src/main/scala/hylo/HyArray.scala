@@ -21,8 +21,7 @@ final class HyArray[Element] private (
 
   /** Returns the number of elements that `this` can contain before allocating new storage. */
   def capacity: Int =
-    if (_storage == null) { 0 }
-    else { _storage.length }
+    if _storage == null then 0 else _storage.length
 
   /** Reserves enough storage to store `n` elements in `this`. */
   def reserveCapacity(n: Int, assumeUniqueness: Boolean = false): HyArray[Element] =
@@ -50,7 +49,7 @@ final class HyArray[Element] private (
 
   /** Adds a new element at the end of the array. */
   def append(source: Element, assumeUniqueness: Boolean = false): HyArray[Element] =
-    val result = if (assumeUniqueness && (count < capacity)) { this } else { copy(capacity + 1) }
+    val result = if assumeUniqueness && (count < capacity) then this else copy(capacity + 1)
     result._storage(count) = source.asInstanceOf[AnyRef]
     result._count += 1
     result
@@ -71,7 +70,7 @@ final class HyArray[Element] private (
     if (isEmpty) {
       (this, None)
     } else {
-      val result = if (assumeUniqueness) { this } else { copy() }
+      val result = if assumeUniqueness then this else copy()
       result._count -= 1
       (result, Some(result._storage(result._count).asInstanceOf[Element]))
     }
@@ -84,7 +83,7 @@ final class HyArray[Element] private (
     if (isEmpty) {
       this
     } else if (keepStorage) {
-      val result = if (assumeUniqueness) { this } else { copy() }
+      val result = if assumeUniqueness then this else copy()
       Arrays.fill(result._storage, null)
       result._count = 0
       result
