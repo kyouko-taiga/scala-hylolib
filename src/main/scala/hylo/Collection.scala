@@ -246,11 +246,8 @@ extension [Self](self: Self)(using s: Collection[Self]) {
           least
         } else {
           val x = self.at(p)
-          _least(
-            self.positionAfter(p),
-            if (isOrderedBefore(x, least)) { x }
-            else { least }
-          )
+          val y = if (isOrderedBefore(x, least)) { x } else { least }
+          _least(self.positionAfter(p), y)
         }
 
       val b = self.startPosition
