@@ -34,6 +34,21 @@ class CollectionTests extends munit.FunSuite {
     assert(!nonEmpty.isBefore(p2, nonEmpty.endPosition))
   }
 
+  test("headAndTail") {
+    val empty = AnyCollection(using hyArrayIsCollection)(HyArray[Int]())
+    assertEquals(empty.headAndTail, None)
+
+    val one = AnyCollection(using hyArrayIsCollection)(HyArray(1))
+    val Some((h0, t0)) = one.headAndTail: @unchecked
+    assertEquals(h0, 1)
+    assert(t0.isEmpty)
+
+    val two = AnyCollection(using hyArrayIsCollection)(HyArray(1, 2))
+    val Some((h1, t1)) = two.headAndTail: @unchecked
+    assertEquals(h1, 1)
+    assertEquals(t1.count, 1)
+  }
+
   // NOTE: Couldn't find a workaround for the ambiguous given instances.
   // test("elementsEqual") {
   //   val a = HyArray(1, 2)
