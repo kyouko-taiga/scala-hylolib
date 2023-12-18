@@ -36,3 +36,5 @@ given intIsComparable: Comparable[Int] with {
   }
 
 }
+
+given intIsStringConvertible: StringConvertible[Int] with {}

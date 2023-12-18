@@ -189,3 +189,19 @@ given hyArrayIsCollection[T](using tIsValue: Value[T]): Collection[HyArray[T]] w
   }
 
 }
+
+// NOTE: This should work.
+// given hyArrayIsStringConvertible[T](using
+//     tIsValue: Value[T],
+//     tIsStringConvertible: StringConvertible[T]
+// ): StringConvertible[HyArray[T]] with {
+//
+//   given Collection[HyArray[T]] = hyArrayIsCollection[T]
+//
+//   extension (self: HyArray[T])
+//     def description: String =
+//       var contents = mutable.StringBuilder()
+//       self.forEach((e) => { contents ++= e.description; true })
+//       s"[${contents.mkString(", ")}]"
+//
+// }
