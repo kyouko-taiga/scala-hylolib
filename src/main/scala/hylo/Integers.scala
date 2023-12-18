@@ -1,5 +1,23 @@
 package hylo
 
+given booleanIsValue: Value[Boolean] with {
+
+  extension (self: Boolean) {
+
+    def copy(): Boolean =
+      // Note: Scala's `Boolean` has value semantics already.
+      self
+
+    def eq(other: Boolean): Boolean =
+      self == other
+
+    def hashInto(hasher: Hasher): Hasher =
+      hasher.combine(if self then 1 else 0)
+
+  }
+
+}
+
 given intIsValue: Value[Int] with {
 
   extension (self: Int) {
