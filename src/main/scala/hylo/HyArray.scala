@@ -1,6 +1,7 @@
 package hylo
 
 import java.util.Arrays
+import scala.collection.mutable
 
 /** An ordered, random-access collection. */
 final class HyArray[Element] private (using
@@ -199,7 +200,7 @@ given hyArrayIsCollection[T](using tIsValue: Value[T]): Collection[HyArray[T]] w
 //   given Collection[HyArray[T]] = hyArrayIsCollection[T]
 //
 //   extension (self: HyArray[T])
-//     def description: String =
+//     override def description: String =
 //       var contents = mutable.StringBuilder()
 //       self.forEach((e) => { contents ++= e.description; true })
 //       s"[${contents.mkString(", ")}]"
