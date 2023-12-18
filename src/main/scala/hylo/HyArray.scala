@@ -104,6 +104,22 @@ final class HyArray[Element] private (using
   def at(p: Int): Element =
     _storage(p).asInstanceOf[Element]
 
+  /** Calls `transform` on the element at `p` to update its value.
+    *
+    * @requires
+    *   `p` is a valid position in `self` different from `endPosition`.
+    * @complexity
+    *   O(1).
+    */
+  def modifyAt(
+      p: Int,
+      transform: (Element) => Element,
+      assumeUniqueness: Boolean = false
+  ): HyArray[Element] =
+    val result = if assumeUniqueness then this else copy()
+    result._storage(p) = transform(at(p)).asInstanceOf[AnyRef]
+    result
+
   /** Returns a textual description of `this`. */
   override def toString: String =
     var s = "["
